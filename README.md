@@ -20,5 +20,6 @@ API REST desenvolvida com ASP.NET Core para gerenciamento de produtos.
 
 1. Clonar o repositório
 2. Executar o projeto
-3. Acessar o Swagger em:
-   https://localhost:7128/swagger
+   dotnet run
+4. Acessar o Swagger em:
+   https://localhost:xxxx/swagger (servidor local que ira abrir para você)
