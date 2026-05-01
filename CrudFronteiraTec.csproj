@@ -28,7 +28,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="C:\Users\jorge\source\repos\CrudFronteiraTec\.editorconfig" />
+    <None Remove=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\jorge\source\repos\CrudFronteiraTec\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\jorge\source\repos\CrudFronteiraTec\.editorconfig" />
   </ItemGroup>
 
 </Project>
