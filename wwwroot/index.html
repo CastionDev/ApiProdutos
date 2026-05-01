@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>CRUD Produtos</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+            input:focus {
+                border-color: #667eea;
+                outline: none;
+            }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-save {
+            background: #667eea;
+            color: white;
+            width: 100%;
+            font-weight: bold;
+        }
+
+            .btn-save:hover {
+                background: #5a67d8;
+            }
+
+        .btn-delete {
+            background: #e53e3e;
+            color: white;
+        }
+
+            .btn-delete:hover {
+                background: #c53030;
+            }
+
+        .btn-edit {
+            background: #3182ce;
+            color: white;
+        }
+
+            .btn-edit:hover {
+                background: #2b6cb0;
+            }
+
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+            .item:hover {
+                transform: scale(1.01);
+                background: #f1f1f1;
+            }
+
+            .item b {
+                color: #333;
+            }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Produtos</h1>
+
+        <form id="form">
+            <input id="nome" placeholder="Nome" required>
+            <input id="descricao" placeholder="Descrição">
+            <input id="preco" type="number" placeholder="Preço" required>
+            <input id="quantidade" type="number" placeholder="Quantidade">
+
+            <button class="btn-save">Salvar</button>
+        </form>
+
+        <a href="admin.html">📋 Ver Produtos</a>
+
+        <div id="lista"></div>
+    </div>
+
+    <script>
+const api = "https://localhost:7128/api/ProductApi";
+
+let editId = null;
+
+async function carregar() {
+    const res = await fetch(api);
+    const data = await res.json();
+
+    const lista = document.getElementById("lista");
+    lista.innerHTML = "";
+
+    data.forEach(p => {
+        lista.innerHTML += `
+            <div class="item">
+                <div>
+                    <b>${p.nome}</b><br>
+                    R$ ${p.preco} | Qtd: ${p.quantidade}
+                </div>
+                <div>
+                    <button class="btn-edit" onclick="editar(${p.id})">Editar</button>
+                    <button class="btn-delete" onclick="deletar(${p.id})">Excluir</button>
+                </div>
+            </div>
+        `;
+    });
+}
+
+document.getElementById("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const produto = {
+        nome: nome.value,
+        descricao: descricao.value,
+        preco: parseFloat(preco.value),
+        quantidade: parseInt(quantidade.value)
+    };
+
+    if (editId) {
+        await fetch(`${api}/${editId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(produto)
+        });
+        editId = null;
+    } else {
+        await fetch(api, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(produto)
+        });
+    }
+
+    form.reset();
+    carregar();
+});
+
+async function deletar(id) {
+    await fetch(`${api}/${id}`, { method: "DELETE" });
+    carregar();
+}
+
+function editar(id) {
+    fetch(`${api}/${id}`)
+        .then(res => res.json())
+        .then(p => {
+            nome.value = p.nome;
+            descricao.value = p.descricao;
+            preco.value = p.preco;
+            quantidade.value = p.quantidade;
+            editId = id;
+        });
+}
+
+carregar();
+    </script>
+
+</body>
+</html>

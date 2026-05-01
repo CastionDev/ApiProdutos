@@ -1,0 +1,9 @@
+ .vs/
+        CrudFronteiraTec.csproj.user
+        CrudFronteiraTec.http
+        appsettings.Development.json
+        bin/
+        obj/
+        products.db
+        products.db-shm
+        products.db-wal
